@@ -1,4 +1,6 @@
 package dev.vorstu.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -46,18 +48,25 @@ public class Student {
         this.phoneNumber=phoneNumber;
     }
 
-//    @OneToOne
-//    @JoinColumn (name = "user_id")
-//    private User user;
-//
-//    public User getUser() {
-//        return user;
-//    }
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-//    public String getUsername() {
-//        return user.getUsername();
-//    }
+    @JsonIgnore
+    @OneToOne (mappedBy = "student")
+    private User user;
+
+    public User getUser() {
+
+        if (user != null) {
+            return user;
+        }
+        return null;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public String getUsername() {
+        if (user != null) {
+            return user.getUsername();
+        }
+        return null;
+    }
 
 }

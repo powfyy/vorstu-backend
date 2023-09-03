@@ -1,11 +1,5 @@
 package dev.vorstu.controllers;
 
-//import dev.vorstu.entity.Role;
-// import org.springframework.security.access.prepost.PreAuthorize;
-////import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-////import org.springframework.security.core.Authentication;
-////import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasRole;
-
 import dev.vorstu.entity.Student;
 import dev.vorstu.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
