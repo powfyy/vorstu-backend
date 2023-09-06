@@ -13,7 +13,6 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/student")
-@PreAuthorize("hasAuthority('Student')")
 public class StudentController {
 
     @Autowired
@@ -22,14 +21,13 @@ public class StudentController {
     private UserRepository userRepository;
     @GetMapping ("/students")
     public Student getStudent(Principal user) {
-        User currentUser = userRepository.findByUsername(user.getName());
+        User currentUser = (userRepository.findByUsername(user.getName())).get();
         return currentUser.getStudent();
     }
 
     @PutMapping (value = "/students", produces = MediaType.APPLICATION_JSON_VALUE)
     public Student updateStudent(Principal user, @RequestBody Student updatedStudent) {
-        String username = user.getName();
-        User currentUser = userRepository.findByUsername(username);
+        User currentUser = (userRepository.findByUsername(user.getName())).get();
         Student student = currentUser.getStudent();
         if(student != null) {
             student.setFio(updatedStudent.getFio());
@@ -42,8 +40,7 @@ public class StudentController {
 
     @DeleteMapping (value = "/students", produces = MediaType.APPLICATION_JSON_VALUE)
     public Long deleteStudent(Principal user){
-        String username = user.getName();
-        User currentUser = userRepository.findByUsername(username);
+        User currentUser = (userRepository.findByUsername(user.getName())).get();
         Student student = currentUser.getStudent();
         if(student != null) {
             studentRepository.deleteById(student.getId());

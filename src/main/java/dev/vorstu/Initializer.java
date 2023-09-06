@@ -8,6 +8,7 @@ import dev.vorstu.entity.Student;
 import dev.vorstu.repositories.StudentRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -19,10 +20,12 @@ public class Initializer {
     private StudentRepository studentRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     public void initial() {
 
-        User studentUser= new User(null, "student", Role.STUDENT, new Password("1234"), true);
-        User adminUser = new User (null, "admin", Role.ADMIN, new Password("sadmin"), true);
+        User studentUser= new User(null, "student", Role.STUDENT, passwordEncoder.encode("1234"), true);
+        User adminUser = new User (null, "admin", Role.ADMIN, passwordEncoder.encode("sadmin"), true);
         Student student1 = new Student("Эми Джонсон", "213", 3321);
         Student studentAdmin = new Student("Admin", "666", 777777777);
         studentUser.setStudent(student1);
