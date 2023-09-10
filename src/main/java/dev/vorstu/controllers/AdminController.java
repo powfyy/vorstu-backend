@@ -1,7 +1,10 @@
 package dev.vorstu.controllers;
 
+import dev.vorstu.entity.Role;
 import dev.vorstu.entity.Student;
+import dev.vorstu.entity.User;
 import dev.vorstu.repositories.StudentRepository;
+import dev.vorstu.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +14,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/admin")
 public class AdminController {
-
-    private final StudentRepository studentRepository;
-
     @Autowired
-    public AdminController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
+    private StudentRepository studentRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
     @GetMapping("students")
     public Iterable<Student> getAllStudents() {
@@ -41,7 +42,16 @@ public class AdminController {
     }
 
     private void removeStudent(Long id) {
-        studentRepository.deleteById(id);
+        Optional<Student> studentOptional = studentRepository.findById(id);
+        if (studentOptional.isPresent()) {
+            Student student = studentOptional.get();
+
+            User user = student.getUser();
+            if (user != null && user.getRole()!= Role.ADMIN) {
+                userRepository.delete(user);
+            }
+            studentRepository.delete(student);
+        }
     }
 
     @PutMapping("students")

@@ -19,9 +19,11 @@ public class StudentController {
     @Autowired
     private UserRepository userRepository;
     @GetMapping ("/students")
-    public Student getStudent(Principal user) {
+    public Student[] getStudent(Principal user) {
         User currentUser = (userRepository.findByUsername(user.getName())).get();
-        return currentUser.getStudent();
+        Student[] students = new Student[1];
+        students[0]=currentUser.getStudent();
+        return students;
     }
 
     @PutMapping (value = "/students", produces = MediaType.APPLICATION_JSON_VALUE)
