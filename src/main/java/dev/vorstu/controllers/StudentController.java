@@ -1,9 +1,11 @@
 package dev.vorstu.controllers;
 
+import dev.vorstu.dto.StudentDTO;
 import dev.vorstu.entity.Student;
 import dev.vorstu.entity.User;
 import dev.vorstu.repositories.StudentRepository;
 import dev.vorstu.repositories.UserRepository;
+import dev.vorstu.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +20,13 @@ public class StudentController {
     private StudentRepository studentRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private StudentService studentService;
     @GetMapping ("/students")
-    public Student[] getStudent(Principal user) {
+    public StudentDTO[] getStudent(Principal user) {
         User currentUser = (userRepository.findByUsername(user.getName())).get();
-        Student[] students = new Student[1];
-        students[0]=currentUser.getStudent();
-        return students;
+        StudentDTO[] studentDTOs ={studentService.findById((currentUser.getStudent()).getId())};
+        return studentDTOs;
     }
 
     @PutMapping (value = "/students", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,14 +42,4 @@ public class StudentController {
         return null;
     }
 
-    @DeleteMapping (value = "/students", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Long deleteStudent(Principal user){
-        User currentUser = (userRepository.findByUsername(user.getName())).get();
-        Student student = currentUser.getStudent();
-        if(student != null) {
-            studentRepository.deleteById(student.getId());
-            return student.getId();
-        }
-        return null;
-    }
 }

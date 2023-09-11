@@ -1,14 +1,16 @@
 package dev.vorstu.controllers;
 
+import dev.vorstu.dto.StudentDTO;
 import dev.vorstu.entity.Role;
 import dev.vorstu.entity.Student;
 import dev.vorstu.entity.User;
 import dev.vorstu.repositories.StudentRepository;
 import dev.vorstu.repositories.UserRepository;
+import dev.vorstu.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -18,22 +20,18 @@ public class AdminController {
     private StudentRepository studentRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private StudentService studentService;
 
     @GetMapping("students")
-    public Iterable<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentDTO> getAllStudents() {
+        return studentService.findAll();
     }
 
     @PostMapping("students")
     @ResponseStatus(HttpStatus.CREATED)
     public Student createStudent(@RequestBody Student newStudent) {
-        return addStudent(newStudent);
-    }
-
-    private Student addStudent(Student student) {
-        studentRepository.save(student);
-        return student;
+        return studentRepository.save(newStudent);
     }
 
     @DeleteMapping("students/{id}")
@@ -56,10 +54,6 @@ public class AdminController {
 
     @PutMapping("students")
     public Student changeStudent(@RequestBody Student changingStudent) {
-        return updateStudent(changingStudent);
+        return studentRepository.save(changingStudent);
     }
-
-    private Student updateStudent(Student student) {
-            return studentRepository.save(student);
-        }
 }
